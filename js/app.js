@@ -45,6 +45,7 @@ var initGame = function () {
         subEl.setAttribute('class', card);
         createEl.appendChild(subEl);
         createEl.classList.add('card');
+        createEl.setAttribute('data-match', card);
         deck.appendChild(createEl);
     });
 };
@@ -64,5 +65,39 @@ initGame();
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
+var cards = document.querySelectorAll('.card');
+var openCards = [];
 
+// Bind Event to List Items
+function activateCards() {
+    cards.forEach(function (card) {
+        card.addEventListener('click', function (e) {
+            card.classList.add('open', 'show');
+            openCards.push(card);
+            if (openCards.length == 2) {
+                compareCards(openCards[0], openCards[1]);
+                openCards = [];
+            }
+        });
+    });
+}
+
+activateCards();
+
+function compareCards(cardA, cardB) {
+    if (cardA.dataset.match === cardB.dataset.match) {
+        cardA.classList.add('match');
+        cardB.classList.add('match');
+    } else { resetMatch(cardA, cardB); }
+}
+
+function resetMatch(cardA, cardB) {
+    setTimeout(function () {
+        cardA.classList.remove('open', 'show');
+        cardB.classList.remove('open', 'show');
+    }, 350);
+}
+
+
+// list of open cards
 console.log('Matching Game ...');
