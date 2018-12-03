@@ -68,6 +68,7 @@ var counter = 0;
 
 // Bind Event to List Items
 function activateCards() {
+    var numOfMatch = 0;
     cards.forEach(function (card) {
         card.addEventListener('click', function (e) {
             card.classList.add('open', 'show');
@@ -77,7 +78,15 @@ function activateCards() {
                 updateCount(counter);
                 openCards = [];
             }
-        });
+            if (card.classList.contains('match')) {
+                numOfMatch += 1;
+                if (numOfMatch == 8) {
+                    // var deck = document.querySelector('.deck');
+                    // deck.classList.add('all-matched');
+                    displaySuccessMsg();
+                }
+            }
+        }); 
     });
 }
 
@@ -113,11 +122,19 @@ function clearGame() {
     }); 
     replay.addEventListener('click', function () {
         clearGame();
-        console.log('i was clicked..');
     });
     updateCount(0);
 }
 
+function displaySuccessMsg() {
+    var $modal = document.querySelector('.modal');
+    var $close = document.querySelector('.modal .close');
+    $modal.classList.add('show');
+    $close.addEventListener('click', function (e) {
+        $modal.classList.remove('show');
+    });
+    clearGame();
+}
 
 // list of open cards
 console.log('Matching Game ...');
