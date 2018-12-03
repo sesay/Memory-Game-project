@@ -67,6 +67,7 @@ initGame();
 
 var cards = document.querySelectorAll('.card');
 var openCards = [];
+var counter = 0;
 
 // Bind Event to List Items
 function activateCards() {
@@ -76,6 +77,7 @@ function activateCards() {
             openCards.push(card);
             if (openCards.length == 2) {
                 compareCards(openCards[0], openCards[1]);
+                updateCount(counter);
                 openCards = [];
             }
         });
@@ -89,8 +91,15 @@ function compareCards(cardA, cardB) {
         cardA.classList.add('match');
         cardB.classList.add('match');
     } else { resetMatch(cardA, cardB); }
+    counter++;
+    console.log(counter);
 }
 
+function updateCount(counter) {
+    var count = counter;
+    var moves = document.querySelector('.moves');
+    moves.textContent = count;
+}
 function resetMatch(cardA, cardB) {
     setTimeout(function () {
         cardA.classList.remove('open', 'show');
