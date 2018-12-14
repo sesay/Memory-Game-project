@@ -39,6 +39,9 @@ var seconds = 0,
     minutes = 0,
     hours = 0;
 
+var appendMinutes = document.querySelector('.timer .minutes');
+var appendSeconds = document.querySelector('.timer .seconds');
+
 var clockObject = {
     timer: null,
     displayTimer: function displayTimer() {
@@ -51,19 +54,20 @@ var clockObject = {
                 hours++;
             }
         }
-        var appendMinutes = document.querySelector('.timer .minutes');
-        var appendSeconds = document.querySelector('.timer .seconds');
         //append the timer
         appendSeconds.innerText = seconds;
         appendMinutes.innerText = minutes;
 
-        console.log(`Minutes is: ${minutes} Seconds is ${seconds}  and hour is ${hours} `);
     }, // display timer
     startTimer: function startTimer() {
         this.timer = setInterval(this.displayTimer, 1000);
     },
     stopTimer: function stopTimer() {
         clearInterval(this.timer);
+    },
+    resetTimer: function resetTimer() {
+        appendSeconds.innerText = "";
+        appendMinutes.innerText = "";
     }
 };
 
@@ -77,7 +81,7 @@ var cards = [
     'fa fa-anchor', 'fa fa-anchor',
     'fa fa-leaf', 'fa fa-leaf',
     'fa fa-bomb', 'fa fa-bomb',
-    'fa fa-bicycle','fa fa-bicycle'
+    'fa fa-bicycle', 'fa fa-bicycle'
 ];
 
 var initGame = function () {
@@ -100,28 +104,40 @@ initGame();
 var el = document.querySelectorAll('.card');
 var openCards = [];
 var counter = 0;
+var initializeTimer = false;
 
 // Bind Event to List Items
 function activateCards() {
     var numOfMatch = 0;
     el.forEach(function (card) {
         card.addEventListener('click', function (e) {
+
+            if (initializeTimer === false) {
+                // set timer on first click
+                initializeTimer = true;
+                clockObject.startTimer();
+            }
+    
             card.classList.add('open', 'show');
             openCards.push(card);
+
             if (openCards.length == 2) {
                 compareCards(openCards[0], openCards[1]);
                 updateCount(counter);
                 openCards = [];
             }
+
             if (card.classList.contains('match')) {
                 numOfMatch += 1;
                 if (numOfMatch == 8) {
                     displaySuccessMsg();
+                    clockObject.stopTimer();
+                    clockObject.resetTimer();
                 }
             }
-            //updates ratings based on number of moves
+            // Update player rating based on number of moves
             playerRatings();
-        });  // click listener
+        });
 
     });
 }
@@ -154,34 +170,48 @@ function clearGame() {
     var revertCards = document.querySelectorAll('.match');
     var replay = document.querySelector('.restart');
     revertCards.forEach(function (revertCard) {
-        revertCard.classList.remove('open','show','match');
-    }); 
+        revertCard.classList.remove('open', 'show', 'match');
+    });
     replay.addEventListener('click', function () {
         clearGame();
-
     });
+
     updateCount(0);
 }
 
 function displaySuccessMsg() {
     var $modal = document.querySelector('.modal');
     var $close = document.querySelector('.modal .close');
+    // Get { time } && { minutes }
+    var minutes = document.querySelector('.minutes');
+    var seconds = document.querySelector('.seconds');
+    var timePlayed = `${minutes.innerText} M : ${seconds.innerText} S`;
+
+    var appendModalTime = document.querySelector('.modal .modal-time');
+    appendModalTime.innerText = timePlayed;
+
     $modal.classList.add('show');
     $close.addEventListener('click', function (e) {
         $modal.classList.remove('show');
     });
+
     clearGame();
 }
 
 function playerRatings() {
     var element = document.querySelector('.score-panel .stars');
+    var modal_rating = document.querySelector('.modal-rating');
+        
     if (counter == 5) {
         element.removeChild(element.firstChild);
+        modal_rating.innerText = 'Average Player';
+
     } else if (counter == 10) {
         element.removeChild(element.firstChild);
+        modal_rating.innerText = 'Fair Player';
     }
 }
 
 
-// list of open cards
+// run JS !!!
 console.log('Matching Game ...');

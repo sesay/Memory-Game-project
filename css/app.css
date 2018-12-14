@@ -118,10 +118,13 @@ h1 {
     margin-left: 10px;
 }
 
-.timer .seconds:after {
-    content: ":";
+
+.timer .seconds:before {
+    content: " :";
     display: inline-block;
+    padding-right: 3px;
 }
+
 
 /** modal **/
 .modal {
@@ -138,13 +141,25 @@ h1 {
     z-index: -1;
     opacity: 0;
 }
+
+.modal p {
+   margin: 5px 0;
+}
 .modal.show {
    z-index: 1;
    opacity: 1;
 }
+
+.modal .modal-time {
+    background: brown;
+    padding: 3px 5px;
+    border-radius: 2px;
+}
+
 .modal .close {
     cursor: pointer;
 }
+
 .modal .close:after {
     display: inline-block;
     content: 'X';
