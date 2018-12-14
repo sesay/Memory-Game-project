@@ -57,7 +57,7 @@ var clockObject = {
         appendSeconds.innerText = seconds;
         appendMinutes.innerText = minutes;
 
-        console.log(`Minutes is: ${minutes}, Seconds is ${seconds}  and hour is ${hours} `);
+        console.log(`Minutes is: ${minutes} Seconds is ${seconds}  and hour is ${hours} `);
     }, // display timer
     startTimer: function startTimer() {
         this.timer = setInterval(this.displayTimer, 1000);
@@ -112,8 +112,6 @@ function activateCards() {
                 compareCards(openCards[0], openCards[1]);
                 updateCount(counter);
                 openCards = [];
-                console.log('Array item is 2....');
-                clockObject.startTimer(); // start timer
             }
             if (card.classList.contains('match')) {
                 numOfMatch += 1;
@@ -121,7 +119,10 @@ function activateCards() {
                     displaySuccessMsg();
                 }
             }
-        }); 
+            //updates ratings based on number of moves
+            playerRatings();
+        });  // click listener
+
     });
 }
 
@@ -171,6 +172,16 @@ function displaySuccessMsg() {
     });
     clearGame();
 }
+
+function playerRatings() {
+    var element = document.querySelector('.score-panel .stars');
+    if (counter == 5) {
+        element.removeChild(element.firstChild);
+    } else if (counter == 10) {
+        element.removeChild(element.firstChild);
+    }
+}
+
 
 // list of open cards
 console.log('Matching Game ...');
