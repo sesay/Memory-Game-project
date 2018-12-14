@@ -108,6 +108,21 @@ h1 {
     cursor: pointer;
 }
 
+.timer {
+    display: inline-block;
+}
+
+.timer:before {
+    content: "timer";
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.timer .seconds:after {
+    content: ":";
+    display: inline-block;
+}
+
 /** modal **/
 .modal {
     position: absolute;

@@ -34,6 +34,40 @@ function shuffle(array) {
     return array;
 }
 
+//initialize the clock
+var seconds = 0,
+    minutes = 0,
+    hours = 0;
+
+var clockObject = {
+    timer: null,
+    displayTimer: function displayTimer() {
+        seconds++;
+        if (seconds >= 60) {
+            seconds = 0;
+            minutes++;
+            if (minutes >= 60) {
+                minutes = 0;
+                hours++;
+            }
+        }
+        var appendMinutes = document.querySelector('.timer .minutes');
+        var appendSeconds = document.querySelector('.timer .seconds');
+        //append the timer
+        appendSeconds.innerText = seconds;
+        appendMinutes.innerText = minutes;
+
+        console.log(`Minutes is: ${minutes}, Seconds is ${seconds}  and hour is ${hours} `);
+    }, // display timer
+    startTimer: function startTimer() {
+        this.timer = setInterval(this.displayTimer, 1000);
+    },
+    stopTimer: function stopTimer() {
+        clearInterval(this.timer);
+    }
+};
+
+// stop timer function
 
 var cards = [
     'fa fa-diamond', 'fa fa-diamond',
@@ -62,14 +96,15 @@ var initGame = function () {
 
 initGame();
 
-var cards = document.querySelectorAll('.card');
+
+var el = document.querySelectorAll('.card');
 var openCards = [];
 var counter = 0;
 
 // Bind Event to List Items
 function activateCards() {
     var numOfMatch = 0;
-    cards.forEach(function (card) {
+    el.forEach(function (card) {
         card.addEventListener('click', function (e) {
             card.classList.add('open', 'show');
             openCards.push(card);
@@ -77,12 +112,12 @@ function activateCards() {
                 compareCards(openCards[0], openCards[1]);
                 updateCount(counter);
                 openCards = [];
+                console.log('Array item is 2....');
+                clockObject.startTimer(); // start timer
             }
             if (card.classList.contains('match')) {
                 numOfMatch += 1;
                 if (numOfMatch == 8) {
-                    // var deck = document.querySelector('.deck');
-                    // deck.classList.add('all-matched');
                     displaySuccessMsg();
                 }
             }
@@ -99,7 +134,6 @@ function compareCards(cardA, cardB) {
         cardB.classList.add('match');
     } else { resetMatch(cardA, cardB); }
     counter++;
-    console.log(counter);
 }
 
 function updateCount(counter) {
@@ -107,6 +141,7 @@ function updateCount(counter) {
     var moves = document.querySelector('.moves');
     moves.textContent = count;
 }
+
 function resetMatch(cardA, cardB) {
     setTimeout(function () {
         cardA.classList.remove('open', 'show');
@@ -122,6 +157,7 @@ function clearGame() {
     }); 
     replay.addEventListener('click', function () {
         clearGame();
+
     });
     updateCount(0);
 }
