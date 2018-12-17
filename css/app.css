@@ -69,6 +69,7 @@ h1 {
     transform: rotateY(0);
     background: #02b3e4;
     cursor: default;
+    pointer-events: none;
 }
 
 .deck .card.show {
@@ -106,6 +107,33 @@ h1 {
 .score-panel .restart {
     float: right;
     cursor: pointer;
+    position: relative;
+}
+
+.score-panel .restart:hover:after {
+    content: 'replay';
+    background: #efefef;
+    width: 200px;
+    padding: 3px;
+    border-radius: 3px;
+    font-size: 10px;
+    position: absolute;
+    width: 40px;
+    text-align: center;
+    top: 0px;
+    left: 23px;
+}
+
+.score-panel .restart:hover:before {
+    width: 8px;
+    height: 8px;
+    content: '';
+    display: inline-block;
+    position: absolute;
+    transform: rotate(48deg);
+    right: -14px;
+    top: 6px;
+    background: #efefef;
 }
 
 .timer {

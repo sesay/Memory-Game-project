@@ -34,10 +34,13 @@ function shuffle(array) {
     return array;
 }
 
-//initialize the clock
-var seconds = 0,
-    minutes = 0,
-    hours = 0;
+//Object for global variables , to prevent loose window variables conflicts
+var globalVariables = {
+    seconds: 0,
+    minutes: 0,
+    hours: 0,
+    counter: 0
+};
 
 let appendMinutes = document.querySelector('.timer .minutes');
 let appendSeconds = document.querySelector('.timer .seconds');
@@ -45,7 +48,10 @@ let appendSeconds = document.querySelector('.timer .seconds');
 var clockObject = {
     timer: null,
     displayTimer: function displayTimer() {
-        seconds++;
+        var seconds = globalVariables.seconds++;
+        var minutes = globalVariables.minutes;
+        var hours = globalVariables.hours;
+        
         if (seconds >= 60) {
             seconds = 0;
             minutes++;
@@ -71,18 +77,17 @@ var clockObject = {
     }
 };
 
-// stop timer function
-
-var cards = [
-    'fa fa-diamond', 'fa fa-diamond',
-    'fa fa-paper-plane-o', 'fa fa-paper-plane-o',
-    'fa fa-bolt', 'fa fa-bolt',
-    'fa fa-cube', 'fa fa-cube',
-    'fa fa-anchor', 'fa fa-anchor',
-    'fa fa-leaf', 'fa fa-leaf',
-    'fa fa-bomb', 'fa fa-bomb',
-    'fa fa-bicycle', 'fa fa-bicycle'
+let symbols = [
+    'fa fa-diamond',
+    'fa fa-paper-plane-o',
+    'fa fa-cube', 'fa fa-anchor',
+    'fa fa-leaf',
+    'fa fa-bicycle',
+    'fa fa-bomb',
+    'fa fa-bolt'
 ];
+
+let cards = symbols.concat(symbols);
 
 var initGame = function () {
     var shuffleCards = shuffle(cards);
@@ -100,14 +105,11 @@ var initGame = function () {
 
 initGame();
 
-
-var el = document.querySelectorAll('.card');
-var openCards = [];
-var counter = 0;
-var initializeTimer = false;
-
 // Bind Event to List Items
 function activateCards() {
+    var el = document.querySelectorAll('.card');
+    var openCards = [];
+    var initializeTimer = false;
     var numOfMatch = 0;
     el.forEach(function (card) {
         card.addEventListener('click', function (e) {
@@ -125,12 +127,11 @@ function activateCards() {
                 e.srcElement.setAttribute('style', 'pointer-events: none;');
             }
             
-
             openCards.push(card);
 
             if (openCards.length == 2) {
                 compareCards(openCards[0], openCards[1]);
-                updateCount(counter);
+                updateCount(globalVariables.counter);
                 openCards = [];
             }
 
@@ -145,23 +146,21 @@ function activateCards() {
             // Update player rating based on number of moves
             playerRatings();
         });
-
     });
 }
 
 activateCards();
-clearGame();
 
 function compareCards(cardA, cardB) {
     if (cardA.dataset.match === cardB.dataset.match) {
         cardA.classList.add('match');
         cardB.classList.add('match');
     } else { resetMatch(cardA, cardB); }
-    counter++;
+    globalVariables.counter++;
 }
 
 function updateCount(counter) {
-    var count = counter;
+    var count = counter || 0;
     var moves = document.querySelector('.moves');
     moves.textContent = count;
 }
@@ -170,20 +169,9 @@ function resetMatch(cardA, cardB) {
     setTimeout(function () {
         cardA.classList.remove('open', 'show');
         cardB.classList.remove('open', 'show');
+        cardA.removeAttribute('style');
+        cardB.removeAttribute('style');
     }, 350);
-}
-
-function clearGame() {
-    var revertCards = document.querySelectorAll('.match');
-    var replay = document.querySelector('.restart');
-    revertCards.forEach(function (revertCard) {
-        revertCard.classList.remove('open', 'show', 'match');
-    });
-    replay.addEventListener('click', function () {
-        clearGame();
-    });
-
-    updateCount(0);
 }
 
 function displaySuccessMsg() {
@@ -201,7 +189,6 @@ function displaySuccessMsg() {
 
     function hideModal(e) {
         $modal.classList.remove('show');
-        console.dir(e);
     }
     
     $close.forEach(function (item) {
@@ -215,16 +202,45 @@ function playerRatings() {
     var element = document.querySelector('.score-panel .stars');
     var modal_rating = document.querySelector('.modal-rating');
         
-    if (counter == 5) {
-        element.removeChild(element.firstChild);
+    if (globalVariables.counter == 5) {
+        element.firstElementChild.setAttribute('style','display: none;');
         modal_rating.innerText = 'Average Player';
 
-    } else if (counter == 10) {
+    } else if (globalVariables.counter == 10) {
         element.removeChild(element.firstChild);
         modal_rating.innerText = 'Fair Player';
     }
 }
 
+function clearGame() {
+    //TODO: I was writing a function to clear the game,then i realized i could just reload the page  basically of too many logics :)
+    /*var deck = document.querySelector('.deck');
+    var cardList = document.querySelectorAll('.card');
+    cardList.forEach(function (item) {
+        deck.removeChild(item);
+    });
+    initGame();
+    activateCards();
+    playerRatings()
+    clockObject.stopTimer();
+    clockObject.resetTimer();
+
+    // reset global variables
+    for (var time in globalVariables) {
+        console.log(globalVariables[time] = 0);
+    }*/
+
+    // just reload the page :) 
+    var restart = document.querySelectorAll('.restart');
+    restart.forEach(function (item) { 
+        item.addEventListener('click', function () {
+            window.location.reload();
+        });
+    });
+    
+
+}
+clearGame();
 
 // run JS !!!
 console.log('Matching Game ...');

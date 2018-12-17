@@ -7,7 +7,8 @@
 
 ## Instructions
 
-This is a very simple game project i built as part of the Udacity Frontend Nano Degree Program , it quite basic for now no dependencies
+This is a very simple game project i built as part of the Udacity Frontend Nano Degree Program , it quite basic for now only dependency used is [FontAwesome](https://fontawesome.com/) for the icons/symbols
+
 
 ## Contributing
 
