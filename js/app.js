@@ -39,8 +39,8 @@ var seconds = 0,
     minutes = 0,
     hours = 0;
 
-var appendMinutes = document.querySelector('.timer .minutes');
-var appendSeconds = document.querySelector('.timer .seconds');
+let appendMinutes = document.querySelector('.timer .minutes');
+let appendSeconds = document.querySelector('.timer .seconds');
 
 var clockObject = {
     timer: null,
@@ -119,6 +119,13 @@ function activateCards() {
             }
     
             card.classList.add('open', 'show');
+
+            //disable click on open card
+            if (e.srcElement.className == 'card open show') {
+                e.srcElement.setAttribute('style', 'pointer-events: none;');
+            }
+            
+
             openCards.push(card);
 
             if (openCards.length == 2) {
@@ -181,7 +188,7 @@ function clearGame() {
 
 function displaySuccessMsg() {
     var $modal = document.querySelector('.modal');
-    var $close = document.querySelector('.modal .close');
+    var $close = document.querySelectorAll('.modal .close');
     // Get { time } && { minutes }
     var minutes = document.querySelector('.minutes');
     var seconds = document.querySelector('.seconds');
@@ -191,8 +198,14 @@ function displaySuccessMsg() {
     appendModalTime.innerText = timePlayed;
 
     $modal.classList.add('show');
-    $close.addEventListener('click', function (e) {
+
+    function hideModal(e) {
         $modal.classList.remove('show');
+        console.dir(e);
+    }
+    
+    $close.forEach(function (item) {
+        item.addEventListener('click', hideModal);
     });
 
     clearGame();

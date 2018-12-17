@@ -172,3 +172,7 @@ h1 {
     top: 50px;
     letter-spacing: 1px;
 }
+
+.modal-replay.close:after {
+    display: none;
+}
